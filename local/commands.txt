@@ -1,0 +1,33 @@
+##### delete old (example commands)
+
+MATCH (n) DETACH DELETE n
+
+MATCH (n:Node)-[alg:tlsh]->(m:Node) DETACH DELETE alg
+
+##### queries
+
+# by algorithm
+
+MATCH (n:Node)-[alg:ssdeep]->(m:Node) WHERE alg.score >= 80 RETURN n, m
+
+MATCH (n:Node)-[alg:tlsh]->(m:Node) WHERE alg.score <= 55 RETURN n, m
+
+MATCH (n:Node)-[alg:mrsh]->(m:Node) WHERE alg.score >= 80 RETURN n, m
+
+MATCH (n:Node)-[alg:simhash]->(m:Node) WHERE alg.score <= 4 RETURN n, m
+
+MATCH (n:Node)-[alg:nilsimsa]->(m:Node) WHERE alg.score >= 115 RETURN n, m
+
+# for concrete index
+
+MATCH (n:Node)-[]->(m:Node) WHERE n.index = 159 RETURN n, m
+
+# vendors, server (vendors by json in vendors.txt)
+
+MATCH (n:Node) WHERE 'Wordpress' in n.vendors RETURN n
+
+MATCH (n:Node) WHERE 'nginx' in n.server RETURN n
+
+# status code
+
+MATCH (n:Node) WHERE n.status_code = 200 RETURN n
