@@ -1,0 +1,16 @@
+run scripts time:
+load, unzip         - hours
+get_data            ~ 5h
+copy, data, divide  ~ 5h
+ssdeep hashes       ~ 3h
+ssdeep digests      ~ 3w
+ssdeep -> edges     ~ 34h
+simhash hashes      ~ 6h
+nilsimsa hashes     ~ 46h
+mrsh                ~ 2w
+mrsh -> edges       ~ 2.5h
+tlsh hashes         ~ 9.5h
+tlsh                ~ 14h
+tlsh -> edges       ~ 3h
+simhash             ~ ..
+nilsimsa            ~ ..
