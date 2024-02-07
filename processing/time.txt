@@ -12,5 +12,6 @@ mrsh -> edges       ~ 2.5h
 tlsh hashes         ~ 9.5h
 tlsh                ~ 14h
 tlsh -> edges       ~ 3h
-simhash             ~ ..
-nilsimsa            ~ ..
+simhash             ~ 20.5h
+nilsimsa            ~ 24h
+clusters            ~ 100Gi/21m

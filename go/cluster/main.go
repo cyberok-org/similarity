@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func findClusters(edgesFilename string, skipScore *int, skipScoreMore bool) ([][]int, error) {
+func findClusters(edgesFilename string, skipScore *int, skipScoreMore bool) ([][]string, error) {
 	file, err := os.Open(edgesFilename)
 	if err != nil {
 		return nil, err
@@ -18,8 +18,8 @@ func findClusters(edgesFilename string, skipScore *int, skipScoreMore bool) ([][
 	defer file.Close()
 
 	clusterNum := 0
-	indexToCluster := make(map[int]int)
-	clusterToIndices := make(map[int][]int)
+	indexToCluster := make(map[string]int)
+	clusterToIndices := make(map[int][]string)
 
 	scanner := bufio.NewScanner(file)
 	scanner.Scan() // header
@@ -34,21 +34,15 @@ func findClusters(edgesFilename string, skipScore *int, skipScoreMore bool) ([][
 				continue
 			}
 		}
-		indexFrom, err := strconv.Atoi(parts[0])
-		if err != nil {
-			return nil, err
-		}
-		indexTo, err := strconv.Atoi(parts[1])
-		if err != nil {
-			return nil, err
-		}
+		indexFrom := parts[0]
+		indexTo := parts[1]
 
 		clusterFrom, clusterFromExist := indexToCluster[indexFrom]
 		clusterTo, clusterToExist := indexToCluster[indexTo]
 
 		if !clusterFromExist {
 			if !clusterToExist {
-				clusterToIndices[clusterNum] = []int{indexFrom, indexTo}
+				clusterToIndices[clusterNum] = []string{indexFrom, indexTo}
 				indexToCluster[indexFrom] = clusterNum
 				indexToCluster[indexTo] = clusterNum
 				clusterNum += 1
@@ -83,7 +77,7 @@ func findClusters(edgesFilename string, skipScore *int, skipScoreMore bool) ([][
 		return nil, err
 	}
 
-	clusters := make([][]int, 0, len(clusterToIndices))
+	clusters := make([][]string, 0, len(clusterToIndices))
 	for _, cluster := range clusterToIndices {
 		clusters = append(clusters, cluster)
 	}
@@ -95,10 +89,10 @@ func findClusters(edgesFilename string, skipScore *int, skipScoreMore bool) ([][
 	return clusters, nil
 }
 
-func showCluster(cluster []int) string {
+func showCluster(cluster []string) string {
 	res := make([]string, 0, len(cluster))
 	for _, index := range cluster {
-		res = append(res, strconv.Itoa(index))
+		res = append(res, index)
 	}
 
 	return strings.Join(res, " ")
@@ -150,7 +144,9 @@ func main() {
 		skipScoreValue = &skipScore
 	}
 
-	findAndSaveClusters(filenameFrom, filenameTo, skipScoreValue, skipScoreMore)
+	if err := findAndSaveClusters(filenameFrom, filenameTo, skipScoreValue, skipScoreMore); err != nil {
+		fmt.Println(err.Error())
+	}
 }
 
 // example: cluster -filenameFrom /home/andrew/cyberok/duplicate/db/import/mrsh_edges.csv -filenameTo /home/andrew/cyberok/duplicate/rooster/clusters/mrsh.txt -skipScore 30 --skipScoreMore=true
