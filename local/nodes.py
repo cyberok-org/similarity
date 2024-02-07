@@ -153,7 +153,7 @@ def nodes_big(main_json_path: str, parsed_body_prefix: str, save_nodes_path: str
 def nodes_add_labels(nodes_path: str, clusters_path: str):      # label should be in the end of line
     nodes_path_to = nodes_path.replace(".csv", "_labeled.csv")  # temp file
 
-    index_to_labels: Dict[int, List[str]] = {}
+    index_to_labels: Dict[str, List[str]] = {}
     for path in tqdm(os.listdir(clusters_path)):
         label_prefix = path.replace('.txt', '')
         with open(f"{clusters_path}{os.sep}{path}", 'r') as f:
@@ -165,24 +165,23 @@ def nodes_add_labels(nodes_path: str, clusters_path: str):      # label should b
                 i += 1
                 label = f"{label_prefix}_{i}"
                 for index in line.split():
-                    int_index = int(index)
-                    if int_index not in index_to_labels:
-                        index_to_labels[int_index] = []
-                    index_to_labels[int_index].append(label)
+                    if index not in index_to_labels:
+                        index_to_labels[index] = []
+                    index_to_labels[index].append(label)
     with open(nodes_path, 'r') as fr, open(nodes_path_to, 'w') as fw:
         fw.write(fr.readline())
         while True:
             line = fr.readline()
             if not line:
                 break
-            index = int(line[:line.index(",")])
+            index = line[:line.index(",")]
             if index in index_to_labels:
                 extra_labels = ";".join(index_to_labels[index])
                 fw.write(f"{line[:-1]};{extra_labels}\n")
             else:
                 fw.write(line)
 
-    os.rename(nodes_path_to, nodes_path)
+    # os.rename(nodes_path_to, nodes_path)
 
 
 if __name__ == "__main__":
