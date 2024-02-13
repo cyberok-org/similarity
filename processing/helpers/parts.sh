@@ -1,5 +1,5 @@
 
-for (( i=1; i < 37; i++ )); do
+for (( i=0; i < 37; i++ )); do
     ssdeep -s ./data/$i/* >> ssdeep_digests.txt
 done
 
