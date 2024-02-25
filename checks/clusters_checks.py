@@ -1,11 +1,12 @@
 import os
 import shutil
-from ..local.metrics import Node, load_nodes
+from metrics import Node, load_nodes
 from tqdm import tqdm
 import json
 from typing import Dict, List, Any, Optional, Callable
 
-__clusters_dir = "clusters"    # set it
+__clusters_dir = "clusters"     # set it
+__nodes_path = "nodes.csv"      # set it
 
 __interesting_vendors = {'Apache httpd', 'Apache Tomcat', 'Microsoft IIS httpd', 'nginx', 'OpenBSD httpd', 'Tornado httpd', 'Werkzeug httpd', 'Node.js Express framework', 'OpenResty web app server', 'BaseHTTPServer', 'Boa HTTPd', 'CherryPy httpd', 'Cloudflare http proxy', 'Cloudflare nginx', 'Gunicorn', 'lighttpd', 'LiteSpeed httpd', 'mini_httpd', 'Mojolicious httpd', 'Mongrel httpd', 'Monkey httpd', 'Squid http proxy', 'Tengine httpd', 'Thin httpd', 'thttpd', 'tinyproxy', 'TwistedWeb httpd', 'uc-httpd', 'WebLogic server', 'WEBrick http', 'Zope httpd', '<empty>'}
 __algorithm_to_sorted_thresholds = {
@@ -299,20 +300,20 @@ def interesting_cluster_decompositions(data_dir: str, save_filename: str, intere
                     fw.write(f'{label_from}: {" ".join(labels_to)}\n')
 
 
-if __name__ == "__main__2":
-    nodes = load_nodes()
+if __name__ == "__main__":
+    nodes = load_nodes(__nodes_path)
 
-    # save_prefix = "res/1"
-    # if os.path.exists(save_prefix):
-    #     shutil.rmtree(save_prefix)
-    # for name in tqdm(os.listdir(__clusters_dir)):
-    #     by_products(nodes, f"{__clusters_dir}{os.sep}{name}", save_prefix=save_prefix)
+    save_prefix = "res/1"
+    if os.path.exists(save_prefix):
+        shutil.rmtree(save_prefix)
+    for name in tqdm(os.listdir(__clusters_dir)):
+        by_products(nodes, f"{__clusters_dir}{os.sep}{name}", save_prefix=save_prefix)
 
-    # save_prefix = "res/5"
-    # if os.path.exists(save_prefix):
-    #     shutil.rmtree(save_prefix)
-    # for name in tqdm(os.listdir(__clusters_dir)):
-    #     metric(nodes, f"{__clusters_dir}{os.sep}{name}", save_prefix=save_prefix)
+    save_prefix = "res/5"
+    if os.path.exists(save_prefix):
+        shutil.rmtree(save_prefix)
+    for name in tqdm(os.listdir(__clusters_dir)):
+        metric(nodes, f"{__clusters_dir}{os.sep}{name}", save_prefix=save_prefix)
 
     save_prefix = "res/3"
     if os.path.exists(save_prefix):
@@ -322,7 +323,7 @@ if __name__ == "__main__2":
         create_cluster_structure(nodes, [f"{__clusters_dir}{os.sep}{name}" for name in names], algorithm=algorithm, save_prefix=save_prefix)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__2":
     data_prefix = "res/3"
     save_prefix = f"{data_prefix}/interesting"
     if os.path.exists(save_prefix):
