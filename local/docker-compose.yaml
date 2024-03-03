@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  neo4j:
+    networks:
+      - default
+    image: neo4j:latest
+    restart: unless-stopped
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - data:/var/lib/neo4j/data
+      - import:/var/lib/neo4j/import
+      - logs:/var/lib/neo4j/logs
+      - plugins:/var/lib/neo4j/plugins
+    environment:
+      - NEO4J_AUTH=neo4j/aX6Ahj1chae6oe4aiShee5aila4oSho7jeexoo0Ahguo3ZeDiw
+      - NEO4J_HOME=/var/lib/neo4j
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - dbms.connectors.default_listen_address=0.0.0.0
+      - dbms.memory.transaction.total.max=0
+      - dbms.connector.bolt.listen_address=:7687
+      - dbms.connector.bolt.advertised_address=:7687
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    healthcheck:
+      test: wget http://neo4j:7474/browser -O -
+      interval: 1s
+      timeout: 1s
+      retries: 25
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/andrew/cyberok/duplicate/db/data'
+  import:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/andrew/cyberok/duplicate/db/import'
+  logs:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/andrew/cyberok/duplicate/db/logs'
+  plugins:
